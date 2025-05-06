@@ -47,9 +47,9 @@ def read_input_xml():
 
     class_config_names_dict = make_a_dict(class_names, class_configs)
 
-    print(class_config_names_dict)
-    print(class_attrs)
-    print(aggregations)
+    # print(class_config_names_dict)
+    # print(class_attrs)
+    # print(aggregations)
 
     return class_config_names_dict, class_attrs, aggregations
 
