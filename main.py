@@ -1,7 +1,9 @@
 import xml.etree.ElementTree as Et
 
+
 def make_a_dict(keys: list, vals: list):
     return dict(zip(keys, vals))
+
 
 def read_input_xml():
     class_configs: list = []
@@ -14,35 +16,45 @@ def read_input_xml():
 
     for tag in root.findall("Class"):
         tag_attrs = tag.attrib
-
         class_configs.append(tag_attrs)
         if "name" in tag_attrs:
             class_names.append(class_configs[index]["name"])
+
         class_configs[index].pop("name")
+
+        class_attrs[class_names[index]] = []
+
+        for attr in tag.findall("Attribute"):
+            class_attrs[class_names[index]].append(attr.attrib)
         index += 1
-    # class_config_names_dict = dict(zip(class_names, ))
 
-    for params_dict in
+    class_config_names_dict = make_a_dict(class_names, class_configs)
 
-
-    print(class_configs)
-    print(class_names)
-    # return xml_read_result
+    print(class_config_names_dict)
+    print(class_attrs)
+    return class_config_names_dict, class_attrs
 
 
 def config_xml_create() -> None:
-    bts = Et.Element("BTS")
-    bts_id = Et.SubElement(bts, "id")
-    bts_name = Et.SubElement(bts, "name")
-    new_tree = Et.ElementTree(bts)
+    class_config_names_dict, class_attrs = read_input_xml()
+    root_name = ""
+    for class_name in class_config_names_dict:
+        if class_config_names_dict[class_name]["isRoot"] == 'true':
+            root_name = class_name
+            break
+    root = Et.Element(root_name)
+    for attr in class_attrs.get(root_name, []):
+        element_name = Et.SubElement(root, attr["name"])
+        element_name.text = attr["type"]
+
+    new_tree = Et.ElementTree(root)
     new_tree.write("config.xml", encoding="utf-8")
 
 
 def test() -> bool:
     success_flag: bool = True
     try:
-        read_input_xml()
-        # config_xml_create()
+        config_xml_create()
     except FileNotFoundError:
         success_flag = False
         print("Файл не существует")
